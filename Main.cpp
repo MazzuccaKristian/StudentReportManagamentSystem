@@ -12,6 +12,10 @@ int main(){
                 cout << "Program closed. Please, wait..." << endl;
                 isStillWorking = false;
                 break;
+
+            case 1:
+                CreateStudent();
+                break;
         }
     }while(isStillWorking);
 
@@ -40,5 +44,49 @@ int GetUserChoice(){
     if(choice < 0 || choice > 5){
         cout << "Invalid choice. Please, try again..." << endl;
     }
+    cin.ignore();
     return choice;
+}
+
+void CreateStudent(){
+    string studentName, studentLastName;
+    int studentRoll, englishMark, mathMark, scienceMark, secondLanguageMark, computerScienceMark;
+    ROLL = ROLL+1;
+    studentRoll = ROLL;
+    cout << "Enter student's name: ";
+    studentName = GetUserString();
+    cout << "Enter student's last name: ";
+    studentLastName = GetUserString();
+    englishMark = GetUserMark("english");
+    mathMark = GetUserMark("math");
+    secondLanguageMark = GetUserMark("second language");
+    computerScienceMark = GetUserMark("computer science");
+}
+
+string GetUserString(){
+    string data;
+    getline(cin, data);
+    return data;
+}
+
+/**
+ * @brief Get and validate user's mark.
+ * 
+ * @param subject Subject's name
+ * @return int (validated mark)
+ */
+int GetUserMark(string subject){
+    bool isValid = false;
+    int mark = 0;
+    do{
+        cout << "Enter " << subject << " mark: ";
+        cin >> mark;
+        if(mark < 0 || mark > 10){
+            cout << "Invalid value. Please, try again..." << endl;
+            isValid = false;
+        }else{
+            isValid = true;
+        }
+    }while(!isValid);
+    return mark;
 }
