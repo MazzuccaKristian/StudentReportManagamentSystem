@@ -49,10 +49,12 @@ void ShowMainMenu(){
  * 
  */
 void Setup(){
+    // Create file if it doesn't exist.
     ofstream students;
-    ifstream rollFile;
     students.open(STUDENTS, ofstream::app);
     students.close();
+    // If the file contains records, extract the max value of roll number.
+    ifstream rollFile;
     rollFile.open(STUDENTS);
     if(rollFile.is_open()){
         int maxRoll = ROLL;
@@ -94,6 +96,7 @@ int GetUserChoice(){
 void CreateStudent(){
     string studentName, studentLastName;
     int studentRoll, englishMark, mathMark, scienceMark, secondLanguageMark, computerScienceMark;
+    // Student related data entry.
     ROLL = ROLL+1;
     studentRoll = ROLL;
     cout << "Enter student's name: ";
@@ -105,7 +108,9 @@ void CreateStudent(){
     scienceMark = GetUserMark("science");
     secondLanguageMark = GetUserMark("second language");
     computerScienceMark = GetUserMark("computer science");
+    // Object creation ("full" constructor)
     Student student(studentRoll, studentName, studentLastName, englishMark, mathMark, scienceMark, secondLanguageMark, computerScienceMark);
+    // Write the student's record.
     if(RecordStudent(&student)){
         cout << "Record added." << endl;
     }else{
@@ -142,7 +147,7 @@ int GetUserMark(string subject){
 }
 
 /**
- * @brief After record's creation, write it on archive.
+ * @brief After objcet creation, write its record (Student::ToString()) on archive.
  * 
  * @param student Student pointer
  * @return true if file's write succeded.
@@ -169,6 +174,11 @@ bool RecordStudent(Student* student){
     return recorded;
 }
 
+/**
+ * @brief Search in archive a particular record.
+ *        If this record exists, show it.
+ * 
+ */
 void SearchRecord(){
     int searchedId;
     ifstream students;
@@ -185,6 +195,10 @@ void SearchRecord(){
     }
 }
 
+/**
+ * @brief Read archive and show every record.
+ * 
+ */
 void ShowArchive(){
     string line;
     ifstream students(STUDENTS);
