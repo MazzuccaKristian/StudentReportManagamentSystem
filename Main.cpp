@@ -4,6 +4,8 @@ int main(){
     bool isStillWorking = true;
     int userChoice = 0;
 
+    Setup();
+
     do{
         ShowMainMenu();
         userChoice = GetUserChoice();
@@ -15,6 +17,10 @@ int main(){
 
             case 1:
                 CreateStudent();
+                break;
+
+            case 2:
+                SearchRecord();
                 break;
         }
     }while(isStillWorking);
@@ -33,6 +39,31 @@ void ShowMainMenu(){
     cout << "Enter your choice: ";
 }
 
+void Setup(){
+    ofstream students;
+    ifstream rollFile;
+    students.open(STUDENTS, ofstream::app);
+    students.close();
+    rollFile.open(STUDENTS);
+    if(rollFile.is_open()){
+        int maxRoll = ROLL;
+        string rollKey, rollValue;
+        while(rollFile >> rollKey >> rollValue){
+            if(rollKey.compare("ID:") == 0){
+                int value = std::stoi(rollValue);
+                if(maxRoll < value){
+                    maxRoll = value;
+                }
+            }
+        }
+        ROLL = maxRoll;
+    }else{
+        perror(STUDENTS);
+    }
+    cout << "ROLL: " << ROLL << endl;
+    rollFile.close();
+}
+
 /**
  * @brief Get and validate the user choice.
  * 
@@ -48,6 +79,10 @@ int GetUserChoice(){
     return choice;
 }
 
+/**
+ * @brief Get student related data. Then create a Student object.
+ * 
+ */
 void CreateStudent(){
     string studentName, studentLastName;
     int studentRoll, englishMark, mathMark, scienceMark, secondLanguageMark, computerScienceMark;
@@ -66,7 +101,7 @@ void CreateStudent(){
     if(RecordStudent(&student)){
         cout << "Record added." << endl;
     }else{
-        cout << "NO" << endl;
+        perror("Registration failed");
     }
 }
 
@@ -124,4 +159,21 @@ bool RecordStudent(Student* student){
         perror("Student pointer");
     }
     return recorded;
+}
+
+void SearchRecord(){
+    int searchedId;
+    ifstream students;
+    cout << "Enter the ID you're looking for: ";
+    cin >> searchedId;
+    students.open(STUDENTS);
+    if(students.is_open()){
+        string line;
+        while(getline(students, line)){
+            //TODO: tokenize string.
+
+        }
+    }else{
+        perror(STUDENTS);
+    }
 }
