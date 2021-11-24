@@ -13,6 +13,7 @@ class Student{
 
     public:
         Student(int roll, string name, string lastName, int engMark, int mathMark, int sciMark, int secLangMark, int csMark);
+        string ToString();
         //Setters
         void SetRoll(int roll);
         void SetName(string name);

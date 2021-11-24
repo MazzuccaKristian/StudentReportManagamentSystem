@@ -11,6 +11,15 @@ Student::Student(int roll, string name, string lastName, int engMark, int mathMa
     SetComputerScienceMark(csMark);
 }
 
+string Student::ToString(){
+    return "ID: " + std::to_string(GetRoll()) + " Name: " + GetName() + " LastName: " +
+            GetLastName() + " English: " + std::to_string(GetEnglishMark()) +
+            " Math: " + std::to_string(GetMathMark()) + " Science: " +
+            std::to_string(GetScienceMark()) + " SecondLanguage: " +
+            std::to_string(GetSecondLanguageMark()) + " ComputerScience: " +
+            std::to_string(GetComputerScienceMark());
+}
+
 void Student::SetRoll(int roll){
     Roll = roll;
 }
