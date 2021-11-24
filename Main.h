@@ -31,3 +31,5 @@ int GetUserMark(string subject);
 bool RecordStudent(Student* student);
 
 void SearchRecord();
+
+void ShowArchive();

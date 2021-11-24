@@ -22,6 +22,10 @@ int main(){
             case 2:
                 SearchRecord();
                 break;
+
+            case 3:
+                ShowArchive();
+                break;
         }
     }while(isStillWorking);
 
@@ -31,7 +35,7 @@ int main(){
 void ShowMainMenu(){
     cout << "MAIN MENU" << endl;
     cout << "1) Create student record;" << endl;
-    cout << "2) Search student record;" << endl;
+    cout << "2) Search student record; (?)" << endl;
     cout << "3) Display all students record;" << endl;
     cout << "4) Delete student record;" << endl;
     cout << "5) Modify student record;" << endl;
@@ -39,6 +43,11 @@ void ShowMainMenu(){
     cout << "Enter your choice: ";
 }
 
+/**
+ * @brief Setup function. Create "students.txt" if needed.
+ *        Get max ROLL from existing file.
+ * 
+ */
 void Setup(){
     ofstream students;
     ifstream rollFile;
@@ -60,7 +69,6 @@ void Setup(){
     }else{
         perror(STUDENTS);
     }
-    cout << "ROLL: " << ROLL << endl;
     rollFile.close();
 }
 
@@ -171,9 +179,20 @@ void SearchRecord(){
         string line;
         while(getline(students, line)){
             //TODO: tokenize string.
-
         }
     }else{
         perror(STUDENTS);
     }
+}
+
+void ShowArchive(){
+    string line;
+    ifstream students(STUDENTS);
+    if(students.is_open()){
+        cout << "ARCHIVE:" << endl;
+        while(getline(students, line)){
+            cout << line << endl;
+        }
+    }
+    students.close();
 }
