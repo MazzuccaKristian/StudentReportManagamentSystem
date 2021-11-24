@@ -59,8 +59,15 @@ void CreateStudent(){
     studentLastName = GetUserString();
     englishMark = GetUserMark("english");
     mathMark = GetUserMark("math");
+    scienceMark = GetUserMark("science");
     secondLanguageMark = GetUserMark("second language");
     computerScienceMark = GetUserMark("computer science");
+    Student student(studentRoll, studentName, studentLastName, englishMark, mathMark, scienceMark, secondLanguageMark, computerScienceMark);
+    if(RecordStudent(&student)){
+        cout << "Record added." << endl;
+    }else{
+        cout << "NO" << endl;
+    }
 }
 
 string GetUserString(){
@@ -89,4 +96,32 @@ int GetUserMark(string subject){
         }
     }while(!isValid);
     return mark;
+}
+
+/**
+ * @brief After record's creation, write it on archive.
+ * 
+ * @param student Student pointer
+ * @return true if file's write succeded.
+ * @return false if file's write failed.
+ */
+bool RecordStudent(Student* student){
+    bool recorded = false;
+    if(student != nullptr){
+        ofstream students(STUDENTS, ofstream::app);
+        if(students.is_open()){
+            string record = student -> ToString();
+            if(!record.empty()){
+                students << record << endl;
+                recorded = true;
+            }else{
+                perror("Empty record");
+            }
+        }else{
+            perror(STUDENTS);
+        }
+    }else{
+        perror("Student pointer");
+    }
+    return recorded;
 }
