@@ -30,6 +30,10 @@ int main(){
             case 4:
                 DeleteStudent();
                 break;
+
+            case 5:
+                ModifyStudent();
+                break;
         }
     }while(isStillWorking);
 
@@ -184,29 +188,20 @@ bool RecordStudent(Student* student){
  * 
  */
 void SearchRecord(){
-    int searchedId;
     bool found = false;
-    std::size_t startPosition, endPosition, subStrLength;
     int convertedId;
     ifstream students;
-    cout << "Enter the ID you're looking for: ";
-    cin >> searchedId;
+    int searchedId = GetUserId();
     students.open(STUDENTS);
     if(students.is_open()){
         string line;
         string idFromRecord;
         while(getline(students, line)){
-            // Custom "string tokenizer". Extracts ID's value from readed line.
-            startPosition = line.find_first_of(" ") + 1;
-            endPosition = line.find_first_of("N");
-            subStrLength = (endPosition - 1) - startPosition;
-            if(startPosition != string::npos){
-                idFromRecord = line.substr(startPosition, subStrLength);
-                convertedId = std::stoi(idFromRecord);
-                if(convertedId == searchedId){
-                    cout << line << endl;
-                    found = true;
-                }
+            idFromRecord = IdTokenizer(line);
+            convertedId = std::stoi(idFromRecord);
+            if(convertedId == searchedId){
+                cout << line << endl;
+                found = true;
             }
         }
     }else{
@@ -241,11 +236,9 @@ void ShowArchive(){
 void DeleteStudent(){
     ifstream students;
     ofstream tempFile;
-    int searchedId;
     std::size_t startPosition, endPosition, subStrLength;
     int convertedId;
-    cout << "Enter the ID you want to delete: ";
-    cin >> searchedId;
+    int searchedId = GetUserId();
     students.open(STUDENTS);
     tempFile.open(TEMP);
     if(students.is_open() && tempFile.is_open()){
@@ -275,4 +268,56 @@ void DeleteStudent(){
         perror(TEMP);
     }
     cout << "ID " << searchedId << " successfully deleted." << endl;
+}
+
+
+void ModifyStudent(){
+    int searchedId = GetUserId();
+    ifstream students;
+    students.open(STUDENTS);
+    if(students.is_open()){
+
+    }else{
+        perror(STUDENTS);
+    }
+    students.close();
+}
+
+/**
+ * @brief Get and validate desired ID.
+ * 
+ * @return int (validated ID)
+ */
+int GetUserId(){
+    int id;
+    bool isValid = false;
+    do{
+        cout << "Enter the ID you're looking for: ";
+        cin >> id;
+        if(id < 0){
+            cout << "Invalid ID. Please, try again..." << endl;
+        }else{
+            isValid = true;
+        }
+    }while(!isValid);
+    return id;
+}
+
+
+/**
+ * @brief Tokenize the given string. Extact ID from string.
+ * 
+ * @param rawString Initial string.
+ * @return string (extracted value).
+ */
+string IdTokenizer(string rawString){
+    string token;
+    std::size_t startPosition, endPosition, subStrLength;
+    startPosition = rawString.find_first_of(" ") + 1;
+    endPosition = rawString.find_first_of("N");
+    subStrLength = (endPosition - 1) - startPosition;
+    if(startPosition != string::npos){
+        token = rawString.substr(startPosition, subStrLength);
+    }
+    return token;
 }
