@@ -5,6 +5,7 @@
 #include "Student.h"
 
 #define STUDENTS "students.txt"
+#define TEMP "temp.txt"
 
 using std::cout;
 using std::endl;
@@ -33,3 +34,5 @@ bool RecordStudent(Student* student);
 void SearchRecord();
 
 void ShowArchive();
+
+void DeleteStudent();
