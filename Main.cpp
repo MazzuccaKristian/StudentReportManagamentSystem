@@ -105,7 +105,7 @@ void CreateStudent(){
     string studentName, studentLastName;
     int studentRoll, englishMark, mathMark, scienceMark, secondLanguageMark, computerScienceMark;
     // Student related data entry.
-    ROLL = ROLL+1;
+    ROLL = ROLL + 1;
     studentRoll = ROLL;
     cout << "Enter student's name: ";
     studentName = GetUserString();
@@ -236,7 +236,6 @@ void ShowArchive(){
 void DeleteStudent(){
     ifstream students;
     ofstream tempFile;
-    std::size_t startPosition, endPosition, subStrLength;
     int convertedId;
     int searchedId = GetUserId();
     students.open(STUDENTS);
@@ -245,15 +244,10 @@ void DeleteStudent(){
         string line;
         string readedId;
         while(getline(students, line)){
-            startPosition = line.find_first_of(" ") + 1;
-            endPosition = line.find_first_of("N");
-            subStrLength = (endPosition - 1) - startPosition;
-            if(startPosition != string::npos){
-                readedId = line.substr(startPosition, subStrLength);
-                convertedId = std::stoi(readedId);
-                if(convertedId != searchedId){
-                    tempFile << line << endl;
-                }
+            readedId = IdTokenizer(line);
+            convertedId = std::stoi(readedId);
+            if(convertedId != searchedId){
+                tempFile << line << endl;
             }
         }
     }else{
@@ -270,17 +264,41 @@ void DeleteStudent(){
     cout << "ID " << searchedId << " successfully deleted." << endl;
 }
 
-
+/**
+ * @brief Delete specified record and write new version.
+ * 
+ */
 void ModifyStudent(){
-    int searchedId = GetUserId();
+    int convertedId;
     ifstream students;
+    ofstream tempFile;
+    int searchedId = GetUserId();
     students.open(STUDENTS);
-    if(students.is_open()){
-
+    tempFile.open(TEMP);
+    if(students.is_open() && tempFile.is_open()){
+        string line;
+        string readedId;
+        while(getline(students, line)){
+            readedId = IdTokenizer(line);
+            convertedId = std::stoi(readedId);
+            if(searchedId != convertedId){
+                tempFile << line << endl;
+            }
+        }
+        students.close();
+        tempFile.close();
+        if(remove(STUDENTS) != 0 ){
+            perror(STUDENTS);
+        }
+        if(rename(TEMP, STUDENTS) != 0){
+            perror(TEMP);
+        }
+        cout << "Enter new data." << endl;
+        cin.ignore();
+        CreateStudent();
     }else{
-        perror(STUDENTS);
+        perror("Can't open file");
     }
-    students.close();
 }
 
 /**
