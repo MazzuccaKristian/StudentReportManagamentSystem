@@ -35,7 +35,7 @@ int main(){
 void ShowMainMenu(){
     cout << "MAIN MENU" << endl;
     cout << "1) Create student record;" << endl;
-    cout << "2) Search student record; (?)" << endl;
+    cout << "2) Search student record;" << endl;
     cout << "3) Display all students record;" << endl;
     cout << "4) Delete student record;" << endl;
     cout << "5) Modify student record;" << endl;
@@ -181,17 +181,36 @@ bool RecordStudent(Student* student){
  */
 void SearchRecord(){
     int searchedId;
+    bool found = false;
+    std::size_t startPosition, endPosition, subStrLength;
+    int convertedId;
     ifstream students;
     cout << "Enter the ID you're looking for: ";
     cin >> searchedId;
     students.open(STUDENTS);
     if(students.is_open()){
         string line;
+        string idFromRecord;
         while(getline(students, line)){
-            //TODO: tokenize string.
+            // Custom "string tokenizer". Extracts ID's value from readed line.
+            startPosition = line.find_first_of(" ") + 1;
+            endPosition = line.find_first_of("N");
+            subStrLength = (endPosition - 1) - startPosition;
+            if(startPosition != string::npos){
+                idFromRecord = line.substr(startPosition, subStrLength);
+                convertedId = std::stoi(idFromRecord);
+                if(convertedId == searchedId){
+                    cout << line << endl;
+                    found = true;
+                }
+            }
         }
     }else{
         perror(STUDENTS);
+    }
+    students.close();
+    if(!found){
+        cout << "The record with ID " << searchedId << " doesn't exist. Please, try again..." << endl;
     }
 }
 
