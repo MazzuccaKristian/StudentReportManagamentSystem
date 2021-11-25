@@ -26,6 +26,10 @@ int main(){
             case 3:
                 ShowArchive();
                 break;
+
+            case 4:
+                DeleteStudent();
+                break;
         }
     }while(isStillWorking);
 
@@ -228,4 +232,47 @@ void ShowArchive(){
         }
     }
     students.close();
+}
+
+/**
+ * @brief Search an ID and delete the record from archive.
+ * 
+ */
+void DeleteStudent(){
+    ifstream students;
+    ofstream tempFile;
+    int searchedId;
+    std::size_t startPosition, endPosition, subStrLength;
+    int convertedId;
+    cout << "Enter the ID you want to delete: ";
+    cin >> searchedId;
+    students.open(STUDENTS);
+    tempFile.open(TEMP);
+    if(students.is_open() && tempFile.is_open()){
+        string line;
+        string readedId;
+        while(getline(students, line)){
+            startPosition = line.find_first_of(" ") + 1;
+            endPosition = line.find_first_of("N");
+            subStrLength = (endPosition - 1) - startPosition;
+            if(startPosition != string::npos){
+                readedId = line.substr(startPosition, subStrLength);
+                convertedId = std::stoi(readedId);
+                if(convertedId != searchedId){
+                    tempFile << line << endl;
+                }
+            }
+        }
+    }else{
+        perror("Can't open file");
+    }
+    students.close();
+    tempFile.close();
+    if(remove(STUDENTS) != 0 ){
+        perror(STUDENTS);
+    }
+    if(rename(TEMP, STUDENTS) != 0){
+        perror(TEMP);
+    }
+    cout << "ID " << searchedId << " successfully deleted." << endl;
 }
