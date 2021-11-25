@@ -36,3 +36,9 @@ void SearchRecord();
 void ShowArchive();
 
 void DeleteStudent();
+
+void ModifyStudent();
+
+int GetUserId();
+
+string IdTokenizer(string rawString);
